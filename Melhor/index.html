@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Criação de Logins</title>
+    <style>
+
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            background: linear-gradient(90deg, #1a237e, #1e88e5);
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Estilo para a tela de fundo branca */
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 350px; /* Define a largura máxima para o contêiner de logins */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Estilo para os itens da lista de logins */
+       .login-item {
+            margin-bottom: 10px; /* Adicione uma margem inferior de 10px entre os itens da lista */
+  
+        }
+
+
+ 
+
+
+        /* Estilo para a lista de sugestões */
+        #sugestoes {
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            position: absolute;
+            background-color: white;
+            color: black;
+            width: 100%;
+            border-radius: 5px;
+            border: 0px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+            padding-left: 10px; /* Adicione algum espaço para a seta */
+            padding-top: 0px; /* Adicione algum espaço para a seta */
+            margin-top: -8px; /* Posicione a seta acima da lista */
+            margin-left: -1px; /* Posicione a seta à esquerda da lista */
+        }
+
+
+
+        /* Estilo para os campos de entrada e seleção */
+        input[type="text"],
+        select,
+        #unidadeInput,
+        #email,
+        #usuario {
+            width: 100%;
+            padding: 7px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc; /* Adicione uma borda cinza */
+            border-radius: 5px;
+            box-sizing: border-box; /* Inclua a borda na largura total */
+        }
+
+        /* Estilo para as sugestões */
+        .sugestao {
+            padding: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Estilo para os botões */
+        button {
+            background-color: #007bff; /* Altera a cor de fundo para azul (#007bff) */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+            display: block;
+            width: 150px; /* Defina o tamanho fixo desejado para os botões */
+        }
+
+        /* Estilo para os botões quando hover */
+        button:hover {
+            background-color: #0056b3; /* Altera a cor de fundo para um tom mais escuro de azul (#0056b3) ao passar o mouse */
+        }
+
+        /* Estilo para a lista de logins */
+        .login-item-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 11px;
+            border: 1px solid #ccc;
+            
+        }
+
+        /* Estilo para o contêiner dos botões de ação */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            max-width: 490px; /* Defina o tamanho máximo desejado para o contêiner */
+        }
+
+        /* Estilo para o texto dos campos de entrada */
+        label {
+            color: #6c757d; /* Define a cor do texto para cinza (#6c757d) */
+        }
+
+        /* Estilo para a lista de logins como um bloco de notas */
+        .login-list {
+            background-color: #f8f9fa; /* Cor de fundo semelhante a um bloco de notas */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 80%; /* Define a largura desejada para a lista de usuários */
+            color: #000000; /* Define a cor do texto como azul neon (#007bff) */
+            font-size: 14px; /* Defina o tamanho da fonte desejado para a lista de usuários */
+            float: right; /* Alinhe à direita da tela branca */
+            margin-top: 10px; /* Margem superior para separar da tela branca */
+            overflow-y: auto; /* Adicione uma barra de rolagem vertical quando necessário */
+            flex-direction: column-reverse; /* Garante que os novos itens sejam adicionados no final da lista */
+            max-height: 300px; /* Defina uma altura máxima desejada para a lista */    
+        }
+    </style>
+</head>
+<body>
+    <h1>Gerenciador de Logins</h1>
+
+    <div class="login-container">
+        <div>
+            <label for="usuario">Usuário:</label>
+            <input type="text" id="usuario">
+        </div>
+
+        <div>
+            <label for="prefixo">Prefixo:</label>
+            <select id="prefixo">
+                <option value="Dr.">Dr.</option>
+                <option value="Dra.">Dra.</option>
+                <option value="Nenhum">Recepção</option>
+            </select>
+        </div>
+
+        <div style="position: relative;">
+            <label for="unidade">Unidade:</label>
+            <input type="text" id="unidadeInput">
+            <div id="sugestoes"></div>
+        </div>
+
+        <div>
+            <label for="email">Email padrão:</label>
+            <input type="text" id="email" readonly>
+        </div>
+
+        <div class="action-buttons">
+            <div>
+                <button onclick="adicionarLogin()">Adicionar Login</button>
+                <button onclick="excluirUltimoLogin()">Excluir Último</button>
+            </div>
+            <div>
+                <button onclick="copiarLista()">Copiar Usuários</button>
+                <button onclick="limparUsuarios()">Limpar Lista</button>
+            </div>
+        </div>
+
+        <div class="login-list" id="listaLogins"></div>
+    </div>
+
+    <script>
+
+        const loginsDoutores = [];
+        let unidadeSelecionada = "";
+
+        const unidades = [
+"AMAR SAUDE - GERAL",
+"HNL AMBULATORIAL - GERAL",
+"HBOL HOSPITAL DE OLHOS - GERAL",
+"CLINC - GERAL",
+"MIL COPIAS - GERAL",
+"SEJA MAXX- GERAL",
+"AMOR SAUDE BIRIGUI - SP",
+"AMOR SAUDE SAO MATEUS - SP",
+"AMOR SAUDE MAUA - SP",
+"AMOR SAUDE ARACATUBA - SP",
+"AMOR SAUDE ARARAQUARA - SP",
+"AMOR SAUDE TUCURUVI - SP",
+"AMOR SAUDE DIADEMA - SP",
+"AMOR SAUDE TATUAPE - SP",
+"AMOR SAUDE CAPELA DO SOCORRO - SP",
+"AMOR SAUDE TATUI - SP",
+"AMOR SAUDE JABAQUARA - SP",
+"TOTAL SAUDE JUNDIAI (SERVIDOR LOCAL)",
+"AMOR SAUDE SAO JOSE DO RIO PRETO - SP",
+"AMOR SAUDE ITAIM PAULISTA - SP",
+"AMOR SAUDE EMBU DAS ARTES -SP",
+"AMOR SAUDE ITANHAEM - SP",
+"AMOR SAUDE ITAPECERICA DA SERRA - SP",
+"AMOR SAUDE CAMPO LIMPO -SP",
+"AMOR SAUDE JACAREI - SP",
+"AMOR SAUDE PRAIA GRANDE - SP",
+"AMOR SAUDE MARILIA - SP",
+"AMOR SAUDE BARUERI - SP",
+"AMOR SAUDE GUARULHOS VH - SP",
+"AMOR SAUDE AVARE - SP",
+"AMOR SAUDE MOGI - SP",
+"AMOR SAUDE PRESIDENTE PRUDENTE - SP",
+"AMOR SAUDE ITAQUAQUECETUBA - SP",
+"AMOR SAUDE FRANCISCO MORATO - SP",
+"AMOR SAUDE VARZEA PAULISTA - SP",
+"AMOR SAUDE GRAJAU (SERVIDOR LOCAL)",
+"AMOR SAUDE BOTUCATU - SP",
+"AMOR SAUDE CIDADE ADEMAR - SP2",
+"AMOR SAUDE FERRAZ DE VASCONCELOS - SP2",
+"AMOR SAUDE PERUIBE - SP2",
+"AMOR SAUDE BLUMENAU - SP2",
+"AMOR SAUDE CASA VERDE - SP2",
+"AMOR SAUDE SANTO ANDRE - SP2",
+"AMOR SAUDE ASSIS - SP2",
+"AMOR SAUDE PIRAPORINHA - SP2",
+"AMOR SAUDE PIRITUBA - SP2",
+"AMOR SAUDE SAO JOSE DOS CAMPOS - SP2",
+"AMOR SAUDE SANTOS - SP2",
+"AMOR SAUDE VARZEA PAULISTA - SP2",
+"AMOR SAUDE IPIRANGA - SP2",
+"AMOR SAUDE FRANCA - SP2",
+"AMOR SAUDE MOGI GUACU - SP2",
+"AMOR SAUDE SALTO - SP2",
+"AMOR SAUDE ITAPETININGA - SP2",
+"AMOR SAUDE CAMPINAS CENTRO - SP2",
+"AMOR SAUDE INDAIATUBA - SP2",
+"AMOR SAUDE SUMARE - SP2",
+"AMOR SAUDE CAMPINAS SUDOESTE - SP2",
+"AMOR SAUDE VILA ANDRADE - SP2",
+"AMOR SAUDE SAPOPEMBA - SP2",
+"AMOR SAUDE PIMENTAS - SP2",
+"PET DE TODOS VILA AMERICANA - SP2",
+"AMOR SAUDE VILA NOVA DE ITAPEVI - SP2",
+"AMOR SAUDE FRANCO DA ROCHA - SP2",
+"AMOR SAUDE CARAGUATATUBA - SP2",
+"AMOR SAUDE BARRETOS - SP2",
+"AMOR SAUDE SUZANO - SP2",
+"AMOR SAUDE APOIO FRANCA - SP2",
+"AMOR SAUDE BEBEDOURO - SP2",
+"AMOR SAUDE VILA SUÍSSA - SP2",
+"AMOR SAUDE AMERICANA - SP2",
+"AMOR SAUDE CAMPINAS - SP2",
+"AMOR SAUDE COTIA - SP2",
+"AMOR SAUDE OSASCO - SP2",
+"AMOR SAUDE GUARATINGUETA - SP2",
+"AMOR SAUDE VIAMAO - SUL",
+"AMOR SAUDE SAO JOSE - SUL",
+"AMOR SAUDE FLORIANOPOLIS - SUL",
+"AMOR SAUDE PONTA GROSSA - SUL",
+"AMOR SAUDE APUCARANA - SUL",
+"AMOR SAUDE SANTA CRUZ DO SUL - SUL",
+"AMOR SAUDE CAXIAS DO SUL - SUL",
+"AMOR SAUDE GUARAPUAVA - SUL",
+"AMOR SAUDE CRISCIUMA - SUL",
+"AMOR SAUDE PARANAGUA - SUL",
+"AMOR SAUDE JARAGUA DO SUL (SERVIDOR LOCAL) - SUL",
+"AMOR SAUDE SAO JOSE DOS PINHAIS - SUL",
+"AMOR SAUDE ARAUCARIA - SUL",
+"AMOR SAUDE PORTO ALEGRE - SUL",
+"AMOR SAUDE ALVORADA - SUL",
+"AMOR SAUDE VIAMAO (ODONTO) - SUL",
+"AMOR SAUDE GUAIBA - SUL",
+"AMOR SAUDE CACHOEIRINHA - SUL",
+"AMOR SAUDE CASTRO - SUL",
+"AMOR SAUDE CANOAS - SUL",
+"AMOR SAUDE PINHEIRINHO - SUL",
+"AMOR SAUDE TOLEDO - SUL",
+"AMOR SAUDE GRAVATAI - SUL",
+"AMOR SAUDE ERECHIM - SUL",
+"AMOR SAUDE PONTA GROSSA LESTE - SUL",
+"AMOR SAUDE UMUARAMA - SUL",
+"AMOR SAUDE JOINVILLE - SUL",
+"AMOR SAUDE ITAJAI - SUL",
+"AMOR SAUDE CAMPO LARGO - SUL",
+"AMOR SAUDE CHAPECO - SUL",
+"AMOR SAUDE PASSO FUNDO - SUL",
+"AMOR SAUDE LONDRINA - SUL",
+"AMOR SAUDE SARANDI - SUL",
+"AMOR SAUDE MATHIAS VELHO - SUL",
+"AMOR SAUDE POA CENTRO - SUL",
+"AMOR SAUDE PALHOCA CENTRO - SUL",
+"AMOR SAUDE LAGES - SUL",
+"AMOR SAUDE MADUREIRA - RJ", 
+"AMOR SAUDE SAO JOAO DE MERITI - RJ", 
+"AMOR SAUDE SAO GONCALO - RJ", 
+"AMOR SAUDE MAGE - RJ", 
+"AMOR SAUDE ANGRA DOS REIS - RJ", 
+"AMOR SAUDE IRAJA - RJ", 
+"AMOR SAUDE NOVA FRIBURGO - RJ", 
+"AMOR SAUDE QUATRO ESTRELAS - RJ", 
+"AMOR SAUDE TERESOPOLIS - RJ", 
+"AMOR SAUDE MARICA - RJ", 
+"AMOR SAUDE VOLTA REDONDA - RJ", 
+"AMOR SAUDE MEIER - RJ", 
+"AMOR SAUDE CAMPO GRANDE - RJ", 
+"AMOR SAUDE MACAE - RJ", 
+"AMOR SAUDE NOVA IGUACU - RJ", 
+"AMOR SAUDE RESENDE - RJ", 
+"AMOR SAUDE BANGU - RJ", 
+"AMOR SAUDE PETROPOLIS - RJ", 
+"AMOR SAUDE ITABORAI  - RJ", 
+"AMOR SAUDE ITAPERUNA - RJ", 
+"AMOR SAUDE REALENGO - RJ", 
+"AMOR SAUDE TRES RIOS - RJ", 
+"AMOR SAUDE BELFORD ROXO - RJ", 
+"AMOR SAUDE DUQUE DE CAXIAS - RJ", 
+"AMOR SAUDE BARRA DO PIRAI - RJ", 
+"AMOR SAUDE ARARUAMA - RJ", 
+"AMOR SAUDE PENHA - RJ", 
+"APOIO AMOR SAUDE CAMPO GRANDE - RJ", 
+"AMOR SAUDE BARRA MANSA - RJ", 
+"AMOR SAUDE CLINICA SAO JOSE MONTES CLAROS - SUDESTE", 
+"AMOR SAUDE RIBEIRAO DAS NEVES - SUDESTE", 
+"AMOR SAUDE VALE DO ACO - SUDESTE", 
+"AMOR SAUDE SERRA - SUDESTE", 
+"AMOR SAUDE JUIZ DE FORA - SUDESTE", 
+"AMOR SAUDE DIVINOPOLIS - SUDESTE", 
+"AMOR ODONTO CARIACICA - SUDESTE", 
+"AMOR SAUDE VITORIA - SUDESTE", 
+"AMOR SAUDE VILA VELHA - SUDESTE", 
+"AMOR SAUDE POUSO ALEGRE - SUDESTE", 
+"AMOR SAUDE SETE LAGOAS - SUDESTE", 
+"AMOR SAUDE GUARAPARI - SUDESTE", 
+"AMOR SAUDE UBERLANDIA - SUDESTE", 
+"AMOR SAUDE SAO MATEUS - SUDESTE", 
+"AMOR SAUDE NOVA VENECIA - SUDESTE", 
+"AMOR SAUDE LINHARES - SUDESTE", 
+"AMOR SAUDE COLATINA -  SUDESTE", 
+"AMOR SAUDE LAVRAS - SUDESTE", 
+"AMOR SAUDE - CARIACICA - SUDESTE", 
+"AMOR SAUDE CONTAGEM - SUDESTE", 
+"AMOR SAUDE SAO PEDRO - SUDESTE", 
+"AMOR SAUDE JUSTINOPOLIS - SUDESTE", 
+"AMOR SAUDE CACHOEIRO DE ITAPEMIRIM - SUDESTE", 
+"AMOR SAUDE BELO HORIZONTE NORTE - SUDESTE", 
+"AMOR SAUDE SAO JOAO DEL REI - SUDESTE", 
+"AMOR SAUDE POCOS DE CALDAS - SUDESTE", 
+"AMOR SAUDE BH OESTE - SUDESTE", 
+"AMOR SAUDE UBA - SUDESTE", 
+"AMOR SAUDE VENDA NOVA - SUDESTE", 
+"AMOR SAUDE VIANA - SUDESTE", 
+"AMOR SAUDE SERRA SEDE - SUDESTE", 
+"AMOR SAUDE MOSSORO (SERVIDOR LOCAL)", 
+"AMOR SAUDE MARACANAU (SERVIDOR LOCAL)", 
+"AMOR SAUDE BELEM - NORTE", 
+"AMOR SAUDE MANAUS CENTRO - NORTE", 
+"AMOR SAUDE MANAUS- NORTE", 
+"AMOR SAUDE MARABA - NORTE", 
+"AMOR SAUDE PORTO VELHO - NORTE", 
+"AMOR SAUDE ANANINDEUA - NORTE", 
+"AMOR SAUDE ARAGUAINA - NORTE", 
+"AMOR SAUDE BELEM CENTRO - NORTE", 
+"AMOR SAUDE MANAUS CIDADE NOVA - NORTE", 
+"AMOR SAUDE PARAUPEBAS - NORTE", 
+"AMOR SAUDE JI PARANA - NORTE", 
+"AMOR SAUDE PALMAS - NORTE", 
+"AMOR SAUDE BARCARENA - NORTE", 
+"AMOR SAUDE BOA VISTA - NORTE", 
+"AMOR SAUDE RIO BRANCO - NORTE", 
+"AMOR SAUDE ANANINDEUA CENTRO - NORTE", 
+"AMOR SAUDE JOAO PESSOA - NE", 
+"AMOR SAUDE MESSEJANA - NE", 
+"AMOR SAUDE PARNAMIRIM - NE", 
+"AMOR SAUDE FORTALEZA CENTRO - NE", 
+"AMOR SAUDE FORTALEZA PSJ - NE", 
+"AMOR SAUDE NATAL - NE", 
+"AMOR SAUDE RUSSAS - NE", 
+"AMOR SAUDE CAMPINA GRANDE - NE", 
+"AMOR SAUDE PATOS - NE", 
+"AMOR SAUDE AQUIRAZ - NE", 
+"AMOR SAUDE SOBRAL - NE", 
+"AMOR SAUDE CAMOCIM - NE", 
+"AMOR SAUDE FORTALEZA DOM LUSTOSA - NE", 
+"AMOR SAUDE GUARABIRA - NE", 
+"AMOR SAUDE PACAJUS - NE", 
+"AMOR SAUDE CARIRI - NE", 
+"AMOR SAUDE IGUATU - NE", 
+"AMOR SAUDE CONJUNTO CEARA - NE", 
+"AMOR SAUDE MARANGUAPE - NE", 
+"AMOR SAUDE CAUCAIA - NE", 
+"APOIO AMOR SAUDE CRATO - NE", 
+"AMOR SAÚDE ACARAU - NE", 
+"AMOR SAUDE VITORIA DA CONQUISTA - NE2", 
+"AMOR SAUDE SAO LUIZ (SERVIDOR LOCAL)", 
+"AMOR SAUDE SJ DE RIBAMAR (SERVIDOR LOCAL)", 
+"AMOR SAUDE ARACAJU - NE2", 
+"AMOR SAUDE ITABUNA - NE2", 
+"AMOR SAÚDE JUAZEIRO - NE2", 
+"AMOR SAUDE TERESINA - NE2", 
+"AMOR SAUDE SALVADOR - NE2", 
+"AMOR SAUDE TERESINA CENTRO - NE2", 
+"AMOR SAUDE CAMACARI - NE2", 
+"AMOR SAUDE TEIXEIRA DE FREITAS - NE2", 
+"AMOR SAUDE IMPERATRIZ - NE2", 
+"AMOR SAUDE FEIRA DE SANTANA - NE2", 
+"AMOR SAUDE LAURO DE FREITAS - NE2", 
+"AMOR SAUDE CAXIAS DO MARANHAO - NE2", 
+"AMOR SAUDE PARIPE - NE2", 
+"AMOR SAUDE ILHEUS - NE2", 
+"AMOR SAUDE BARREIRAS - NE2", 
+"AMOR SAUDE SAJ - NE2", 
+"AMOR SAUDE PORTO SEGURO - NE2", 
+"AMOR SAUDE ALAGOINHAS - NE2", 
+"AMOR SAUDE PAULO AFONSO - NE2", 
+"AMOR SAUDE PICOS - NE2", 
+"AMOR SAUDE SIMOES FILHO - NE2", 
+"AMOR SAUDE JEQUIE - NE2", 
+"AMOR SAUDE IBIRAPUERA - NE2", 
+"AMOR SAUDE DOIS DE JULHO - NE2", 
+"AMOR SAUDE SERRINHA - NE2", 
+"AMOR SAUDE ITABUNA CENTRO - NE2", 
+"AMOR SAUDE GUANAMBI - NE2", 
+"AMOR SAUDE PARNAIBA - NE2", 
+"AMOR SAUDE EUNAPOLIS - NE2", 
+"AMOR SAUDE NOSSA  SENHORA DO SOCORRO - NE2", 
+"AMOR SAUDE CABULA - NE2",
+"AMOR SAUDE PAULISTA - NE3",
+"AMOR SAUDE OLINDA - NE3",
+"AMOR SAUDE CAMARAGIBE - NE3",
+"AMOR SAUDE RECIFE CENTRO - NE3",
+"AMOR SAUDE AFOGADOS - NE3",
+"AMOR SAUDE PETROLINA - NE3",
+"AMOR SAUDE ARAPIRACA - NE3",
+"AMOR SAUDE JABOATAO - NE3",
+"AMOR SAUDE GARANHUNS - NE3",
+"AMOR SAUDE GOIANA - NE3",
+"AMOR SAUDE VITORIA DE SANTO ANTAO - NE3",
+"AMOR SAUDE MACEIO NORTE - NE3",
+"AMOR SAUDE TIMBAUBA - NE3",
+"AMOR SAUDE MACEIO - NE3",
+"AMOR SAUDE SURUBIM - NE3",
+"AMOR SAUDE CARUARU - NE3",
+"AMOR SAUDE SERRA TALHADA - NE3",
+"AMOR SAUDE IGARASSU - NE3",
+"AMOR SAUDE CAMPO GRANDE - CO",
+"AMOR SAUDE CUIABA - CO",
+"AMOR SAUDE GOIANIA SUL - CO",
+"AMOR SAUDE SAMAMBAIA - CO",
+"AMOR SAUDE VALPARAISO - CO",
+"AMOR SAUDE VARZEA GRANDE - CO",
+"AMOR SAUDE RONDONOPOLIS - CO",
+"AMOR SAUDE CEILANDIA - CO",
+"AMOR SAUDE GAMA - CO",
+"AMOR SAUDE TRES LAGOAS - CO",
+"AMOR SAUDE ITUMBIARA - CO",
+"AMOR SAUDE TANGARA DA SERRA - CO",
+"AMOR SAUDE CEILANDIA SUL - CO",
+"AMOR SAUDE AGUAS LINDAS DE GOIAS - CO",
+"AMOR SAUDE RIO VERDE - CO",
+"AMOR SAUDE ANAPOLIS - CO",
+"AMOR SAUDE PLANALTINA - CO",
+"AMOR SAUDE JARDIM BALNEARIO - CO",
+"AMOR SAUDE GOIANIA CENTRO NORTE - CO",
+"AMOR SAUDE SANTA MARIA - CO",
+"AMOR SAUDE TAGUATINGA - CO",
+"AMOR SAUDE SENADOR CANEDO - CO",
+"AMOR SAUDE DO CRUZEIRO - CO",
+"AMOR SAUDE RECANTO DAS EMAS - CO",
+"AMOR SAUDE CALDAS NOVAS - CO",
+"AMOR SAUDE FORMOSA - CO",
+"AMOR SAUDE SAO SEBASTIAO - CO",
+"AMOR SAUDE VILA MARIA - SP"
+
+
+
+
+
+
+        ];
+
+        function obterDominioEmail(unidade) {
+            const unidadesEmails = {
+
+                "AMAR SAUDE - GERAL": "amarsaudepa.com",
+                "HNL AMBULATORIAL - GERAL": "hnlamb.com",
+                "HBOL HOSPITAL DE OLHOS - GERAL": "hbol.com",
+                "CLINC - GERAL": "clinc.com",
+                "MIL COPIAS - GERAL": "milcopias.com",
+                "SEJA MAXX- GERAL": "sejamaxx.com",
+                "AMOR SAUDE BIRIGUI - SP": "amorsaudebirigui.com",
+                "AMOR SAUDE SAO MATEUS - SP": "amorsaudesm.com",
+                "AMOR SAUDE MAUA - SP": "amorsaudemaua.com.br",
+                "AMOR SAUDE ARACATUBA - SP": "amorsaudearacatuba.com",
+                "AMOR SAUDE ARARAQUARA - SP": "amorsaudeararaquara.com",
+                "AMOR SAUDE TUCURUVI - SP": "amorsaudetucuruvi.com.br",
+                "AMOR SAUDE DIADEMA - SP": "amorsaudediadema.com",
+                "AMOR SAUDE TATUAPE - SP": "amorsaudetatuape.com",
+                "AMOR SAUDE CAPELA DO SOCORRO - SP": "ascapela.com.br",
+                "AMOR SAUDE TATUI - SP": "amorsaudetatui.com",
+                "AMOR SAUDE JABAQUARA - SP": "amorsaudejabaquara.com",
+                "TOTAL SAUDE JUNDIAI (SERVIDOR LOCAL)": "amorsaudejundiai.com",
+                "AMOR SAUDE SAO JOSE DO RIO PRETO - SP": "amorsaudesjriopreto.com",
+                "AMOR SAUDE ITAIM PAULISTA - SP": "amorsaudeitaim.com",
+                "AMOR SAUDE EMBU DAS ARTES -SP": "amorsaudeembudasartes.com",
+                "AMOR SAUDE ITANHAEM - SP": "amorsaudeitanhaem.com",
+                "AMOR SAUDE ITAPECERICA DA SERRA - SP": "amorsaudeitapecerica.com",
+                "AMOR SAUDE CAMPO LIMPO -SP": "amorsaudepirajussara.com",
+                "AMOR SAUDE JACAREI - SP": "amorsaudejacarei.com",
+                "AMOR SAUDE PRAIA GRANDE - SP": "amorsaudepraiagrande.com",
+                "AMOR SAUDE MARILIA - SP": "amorsaudemarilia.com",
+                "AMOR SAUDE BARUERI - SP": "amorsaudebarueri.com",
+                "AMOR SAUDE GUARULHOS VH - SP": "amorsaudeguarulhosvh.com",
+                "AMOR SAUDE AVARE - SP": "amorsaudeavare.com",
+                "AMOR SAUDE MOGI - SP": "amorsaudemogi.com",
+                "AMOR SAUDE PRESIDENTE PRUDENTE - SP": "amorsaudepprudente.com",
+                "AMOR SAUDE ITAQUAQUECETUBA - SP": "amorsaudeitaqua.com",
+                "AMOR SAUDE FRANCISCO MORATO - SP": "asfmorato.com",
+                "AMOR SAUDE VARZEA PAULISTA - SP": "asvpaulista.com",
+                "AMOR SAUDE GRAJAU (SERVIDOR LOCAL)": "asgrajau.com",
+                "AMOR SAUDE BOTUCATU - SP": "asbotucatu.com",
+                "AMOR SAUDE CIDADE ADEMAR - SP2": "ascidadeademar.com",
+                "AMOR SAUDE FERRAZ DE VASCONCELOS - SP2": "amorsaudefvasconcelos.com",
+                "AMOR SAUDE PERUIBE - SP2": "asperuibe.com",
+                "AMOR SAUDE BLUMENAU - SP2": "amorsaudeblumenau.com",
+                "AMOR SAUDE CASA VERDE - SP2": "ascasaverde.com",
+                "AMOR SAUDE SANTO ANDRE - SP2": "assandre.com",
+                "AMOR SAUDE ASSIS - SP2": "amorsaudeassis.com",
+                "AMOR SAUDE PIRAPORINHA - SP2": "aspiraporinha.com",
+                "AMOR SAUDE PIRITUBA - SP2": "amorsaudepirituba.com",
+                "AMOR SAUDE SAO JOSE DOS CAMPOS - SP2": "asjcampos.com",
+                "AMOR SAUDE SANTOS - SP2": "assantos.com",
+                "AMOR SAUDE VARZEA PAULISTA - SP2": "asvpaulista.com",
+                "AMOR SAUDE IPIRANGA - SP2": "amorsaudeipiranga.com",
+                "AMOR SAUDE FRANCA - SP2": "amorsaudefranca.com",
+                "AMOR SAUDE MOGI GUACU - SP2": "asmogiguacu.com",
+                "AMOR SAUDE SALTO - SP2": "amorsaudesalto.com",
+                "AMOR SAUDE ITAPETININGA - SP2": "amorsaudeitapetininga.com",
+                "AMOR SAUDE CAMPINAS CENTRO - SP2": "ascampinascentro.com",
+                "AMOR SAUDE INDAIATUBA - SP2": "amorsaudeindaiatuba.com",
+                "AMOR SAUDE SUMARE - SP2": "assumare.com",
+                "AMOR SAUDE CAMPINAS SUDOESTE - SP2": "ascampinassudoeste.com",
+                "AMOR SAUDE VILA ANDRADE - SP2": "asvilaandrade.com",
+                "AMOR SAUDE SAPOPEMBA - SP2": "assapopemba.com",
+                "AMOR SAUDE PIMENTAS - SP2": "ascumbica.com",
+                "PET DE TODOS VILA AMERICANA - SP2": "petdetodosamericana.com",
+                "AMOR SAUDE VILA NOVA DE ITAPEVI - SP2": "asvnitapevi.com",
+                "AMOR SAUDE FRANCO DA ROCHA - SP2": "asfrancodarocha.com",
+                "AMOR SAUDE CARAGUATATUBA - SP2": "ascaraguatatuba.com",
+                "AMOR SAUDE BARRETOS - SP2": "asbarretos.com",
+                "AMOR SAUDE SUZANO - SP2": "assuzano.com",
+                "AMOR SAUDE APOIO FRANCA - SP2": "asapoiofranca.com",
+                "AMOR SAUDE BEBEDOURO - SP2": "asbebedouro.com",
+                "AMOR SAUDE VILA SUÍSSA - SP2": "asvilasuica.com",
+                "AMOR SAUDE AMERICANA - SP2": "asamericana.com",
+                "AMOR SAUDE CAMPINAS - SP2": "amorsaudecampinas.com",
+                "AMOR SAUDE COTIA - SP2": "amscotia.com",
+                "AMOR SAUDE OSASCO - SP2": "amcasaudeosasco.com",
+                "AMOR SAUDE GUARATINGUETA - SP2": "amsguartingueta.com",
+                "AMOR SAUDE VIAMAO - SUL": "amorsaudeviamao.com",
+                "AMOR SAUDE SAO JOSE - SUL": "amorsaudesaojose.com",
+                "AMOR SAUDE FLORIANOPOLIS - SUL": "amorsaudeflorianopolis.com",
+                "AMOR SAUDE PONTA GROSSA - SUL": "amorsaudepontagrossa.com",
+                "AMOR SAUDE APUCARANA - SUL": "amorsaudeapucarana.com",
+                "AMOR SAUDE SANTA CRUZ DO SUL - SUL": "amorsaudesantacruz.com",
+                "AMOR SAUDE CAXIAS DO SUL - SUL": "amorsaudecaxias.com",
+                "AMOR SAUDE GUARAPUAVA - SUL": "amorsaudeguarapuava.com",
+                "AMOR SAUDE CRISCIUMA - SUL": "amorsaudecrisciuma.com",
+                "AMOR SAUDE PARANAGUA - SUL": "amorsaudeparanagua.com",
+                "AMOR SAUDE JARAGUA DO SUL (SERVIDOR LOCAL) - SUL": "amorsaudejaragua.com",
+                "AMOR SAUDE SAO JOSE DOS PINHAIS - SUL": "amorsaudepinhais.com",
+                "AMOR SAUDE ARAUCARIA - SUL": "asaraucaria.com",
+                "AMOR SAUDE PORTO ALEGRE - SUL": "aspalegre.com",
+                "AMOR SAUDE ALVORADA - SUL": "asalvorada.com",
+                "AMOR SAUDE VIAMAO (ODONTO) - SUL": "amorsaudeviamao.com",
+                "AMOR SAUDE GUAIBA - SUL": "asguaiba.com",
+                "AMOR SAUDE CACHOEIRINHA - SUL": "amorsaudecachoeirinha.com",
+                "AMOR SAUDE CASTRO - SUL": "ascastro.com",
+                "AMOR SAUDE CANOAS - SUL": "ascanoas.com",
+                "AMOR SAUDE PINHEIRINHO - SUL": "aspinheirinho.com",
+                "AMOR SAUDE TOLEDO - SUL": "astoledo.com",
+                "AMOR SAUDE GRAVATAI - SUL": "asgravatai.com",
+                "AMOR SAUDE ERECHIM - SUL": "aserechim.com",
+                "AMOR SAUDE PONTA GROSSA LESTE - SUL": "aspontagrossa.com",
+                "AMOR SAUDE UMUARAMA - SUL": "asumuarama.com",
+                "AMOR SAUDE JOINVILLE - SUL": "asjoinville.com",
+                "AMOR SAUDE ITAJAI - SUL": "amorsaudeitajai.com",
+                "AMOR SAUDE CAMPO LARGO - SUL": "amorsaudecampolargo.com",
+                "AMOR SAUDE CHAPECO - SUL": "aschapeco.com",
+                "AMOR SAUDE PASSO FUNDO - SUL": "aspassofundo.com",
+                "AMOR SAUDE LONDRINA - SUL": "aslondrina.com",
+                "AMOR SAUDE SARANDI - SUL": "assarandi.com",
+                "AMOR SAUDE MATHIAS VELHO - SUL": "asmathiasvelho.com",
+                "AMOR SAUDE POA CENTRO - SUL": "aspoa.com",
+                "AMOR SAUDE PALHOCA CENTRO - SUL": "amspalhoca.com",
+                "AMOR SAUDE LAGES - SUL": "amslages.com",
+                "AMOR SAUDE MADUREIRA - RJ": "amorsaudemadureira.com",
+                "AMOR SAUDE SAO JOAO DE MERITI - RJ": "amorsaudesjmeriti.com",
+                "AMOR SAUDE SAO GONCALO - RJ": "amorsaudesg.com",
+                "AMOR SAUDE MAGE - RJ": "amorsaudemage.com",
+                "AMOR SAUDE ANGRA DOS REIS - RJ": "amorsaudeangra.com",
+                "AMOR SAUDE IRAJA - RJ": "amorsaudeiraja.com",
+                "AMOR SAUDE NOVA FRIBURGO - RJ": "amorsaudenfriburgo.com",
+                "AMOR SAUDE QUATRO ESTRELAS - RJ": "amorsaudequatroestrelas.com",
+                "AMOR SAUDE TERESOPOLIS - RJ": "amorsaudeteresopolis.com",
+                "AMOR SAUDE MARICA - RJ": "amorsaudemarica.com",
+                "AMOR SAUDE VOLTA REDONDA - RJ": "amorsaudevredonda.com",
+                "AMOR SAUDE MEIER - RJ": "amorsaudemeier.com",
+                "AMOR SAUDE CAMPO GRANDE - RJ": "amorsaudecgrande.com",
+                "AMOR SAUDE MACAE - RJ": "amorsaudemacae.com",
+                "AMOR SAUDE NOVA IGUACU - RJ": "@asnovaiguacu.com",
+                "AMOR SAUDE RESENDE - RJ": "amorsauderesende.com",
+                "AMOR SAUDE BANGU - RJ": "asbangu.com",
+                "AMOR SAUDE PETROPOLIS - RJ": "aspetropolis.com",
+                "AMOR SAUDE ITABORAI  - RJ": "amorsaudeitaborai.com",
+                "AMOR SAUDE ITAPERUNA - RJ": "asitaperuna.com",
+                "AMOR SAUDE REALENGO - RJ": "amorsauderealengo.com",
+                "AMOR SAUDE TRES RIOS - RJ": "astresrios.com",
+                "AMOR SAUDE BELFORD ROXO - RJ": "asbelfordroxo.com",
+                "AMOR SAUDE DUQUE DE CAXIAS - RJ": "asduquedecaxias.com",
+                "AMOR SAUDE BARRA DO PIRAI - RJ": "asbarradopirai.com",
+                "AMOR SAUDE ARARUAMA - RJ": "asararuama.com",
+                "AMOR SAUDE PENHA - RJ": "amspenha.com",
+                "APOIO AMOR SAUDE CAMPO GRANDE - RJ": "apoiocampogrande.com",
+                "AMOR SAUDE BARRA MANSA - RJ": "amsbarramansa.com",
+                "AMOR SAUDE CLINICA SAO JOSE MONTES CLAROS - SUDESTE": "amorsaudemc.com.br",
+                "AMOR SAUDE RIBEIRAO DAS NEVES - SUDESTE": "amorsaudeneves.com",
+                "AMOR SAUDE VALE DO ACO - SUDESTE": "amorsaudeva.com",
+                "AMOR SAUDE SERRA - SUDESTE": "amorsaudeserra.com",
+                "AMOR SAUDE JUIZ DE FORA - SUDESTE": "amorsaudejuizfora.com",
+                "AMOR SAUDE DIVINOPOLIS - SUDESTE": "asdivinopolis.com",
+                "AMOR ODONTO CARIACICA - SUDESTE": "amorodontocariacica.com",
+                "AMOR SAUDE VITORIA - SUDESTE": "amorsaudevitoria.com",
+                "AMOR SAUDE VILA VELHA - SUDESTE": "asvvelha.com",
+                "AMOR SAUDE POUSO ALEGRE - SUDESTE": "aspousoalegre.com",
+                "AMOR SAUDE SETE LAGOAS - SUDESTE": "assetelagoas.com",
+                "AMOR SAUDE GUARAPARI - SUDESTE": "asguarapari.com",
+                "AMOR SAUDE UBERLANDIA - SUDESTE": "amorsaudeuberlandia.com",
+                "AMOR SAUDE SAO MATEUS - SUDESTE": "assmateus.com",
+                "AMOR SAUDE NOVA VENECIA - SUDESTE": "asnovavenecia.com",
+                "AMOR SAUDE LINHARES - SUDESTE": "aslinhares.com",
+                "AMOR SAUDE COLATINA -  SUDESTE": "ascolatina.com",
+                "AMOR SAUDE LAVRAS - SUDESTE": "amorsaudelavras.com",
+                "AMOR SAUDE - CARIACICA - SUDESTE": "ascariacica.com",
+                "AMOR SAUDE CONTAGEM - SUDESTE": "ascontagem.com",
+                "AMOR SAUDE SAO PEDRO - SUDESTE": "assaopedro.com",
+                "AMOR SAUDE JUSTINOPOLIS - SUDESTE": "asjustinopolis.com",
+                "AMOR SAUDE CACHOEIRO DE ITAPEMIRIM - SUDESTE": "ascachoeirodeitapemirim.com",
+                "AMOR SAUDE BELO HORIZONTE NORTE - SUDESTE": "amorsaudebhnorte.com",
+                "AMOR SAUDE SAO JOAO DEL REI - SUDESTE": "assjdelrei.com",
+                "AMOR SAUDE POCOS DE CALDAS - SUDESTE": "aspocosdecaldas.com",
+                "AMOR SAUDE BH OESTE - SUDESTE": "asbhoeste.com",
+                "AMOR SAUDE UBA - SUDESTE": "asuba.com",
+                "AMOR SAUDE VENDA NOVA - SUDESTE": "amsvendanova.com",
+                "AMOR SAUDE VIANA - SUDESTE": "amsviana.com",
+                "AMOR SAUDE SERRA SEDE - SUDESTE": "amsserrasede.com",
+                "AMOR SAUDE MOSSORO (SERVIDOR LOCAL)": "amorsaudemossoro.com",
+                "AMOR SAUDE MARACANAU (SERVIDOR LOCAL)": "amorsaudemaracanau.com",
+                "AMOR SAUDE BELEM - NORTE": "amorsaudebelem.com",
+                "AMOR SAUDE MANAUS CENTRO - NORTE": "amorsaudeamcentro.com",
+                "AMOR SAUDE MANAUS- NORTE": "amorsaudeam.com",
+                "AMOR SAUDE MARABA - NORTE": "amorsaudemaraba.com",
+                "AMOR SAUDE PORTO VELHO - NORTE": "amorsaudeporto.com",
+                "AMOR SAUDE ANANINDEUA - NORTE": "amorsaudeananindeua.com",
+                "AMOR SAUDE ARAGUAINA - NORTE": "asaraguaina.com",
+                "AMOR SAUDE BELEM CENTRO - NORTE": "asbelemcentro.com",
+                "AMOR SAUDE MANAUS CIDADE NOVA - NORTE": "asmanauscnova.com",
+                "AMOR SAUDE PARAUPEBAS - NORTE": "asparaupebas.com",
+                "AMOR SAUDE JI PARANA - NORTE": "amorsaudejiparana.com",
+                "AMOR SAUDE PALMAS - NORTE": "aspalmas.com.br",
+                "AMOR SAUDE BARCARENA - NORTE": "asbarcarena.com",
+                "AMOR SAUDE BOA VISTA - NORTE": "amsboavista.com",
+                "AMOR SAUDE RIO BRANCO - NORTE": "asriobranco.com",
+                "AMOR SAUDE ANANINDEUA CENTRO - NORTE": "asananindeuacentro.com",
+                "AMOR SAUDE JOAO PESSOA - NE": "amorsaude.com.br",
+                "AMOR SAUDE MESSEJANA - NE": "amorsaudemessejana.com.br",
+                "AMOR SAUDE PARNAMIRIM - NE": "amorsaudeparnamirim.com.br",
+                "AMOR SAUDE FORTALEZA CENTRO - NE": "amorsaudefortaleza1.com",
+                "AMOR SAUDE FORTALEZA PSJ - NE": "amorsaudepsj.com",
+                "AMOR SAUDE NATAL - NE": "amorsaudenatal.com",
+                "AMOR SAUDE RUSSAS - NE": "asrussas.com",
+                "AMOR SAUDE CAMPINA GRANDE - NE": "@ascampinagrande.com",
+                "AMOR SAUDE PATOS - NE": "aspatos.com",
+                "AMOR SAUDE AQUIRAZ - NE": "asaquiraz.com",
+                "AMOR SAUDE SOBRAL - NE": "amorsaudesobral.com",
+                "AMOR SAUDE CAMOCIM - NE": "amorsaudecamocim.com",
+                "AMOR SAUDE FORTALEZA DOM LUSTOSA - NE": "asdomlustosa.com",
+                "AMOR SAUDE GUARABIRA - NE": "asguarabira.com",
+                "AMOR SAUDE PACAJUS - NE": "aspacajus.com",
+                "AMOR SAUDE CARIRI - NE": "ascariri.com",
+                "AMOR SAUDE IGUATU - NE": "asiguatu.com",
+                "AMOR SAUDE CONJUNTO CEARA - NE": "asconjuntoceara.com",
+                "AMOR SAUDE MARANGUAPE - NE": "asmaranguape.com",
+                "AMOR SAUDE CAUCAIA - NE": "amorsaudecaucaia.com",
+                "APOIO AMOR SAUDE CRATO - NE": "amscrato.com",
+                "AMOR SAÚDE ACARAU - NE": "amorsaudeacarau.com",
+                "AMOR SAUDE VITORIA DA CONQUISTA - NE2": "amorsaudevc.com.br",
+                "AMOR SAUDE SAO LUIZ (SERVIDOR LOCAL)": "amorsaudesaoluis.com",
+                "AMOR SAUDE SJ DE RIBAMAR (SERVIDOR LOCAL)": "amorsaudesjribamar.com.br",
+                "AMOR SAUDE ARACAJU - NE2": "amorsaudearacaju.com",
+                "AMOR SAUDE ITABUNA - NE2": "asitabuna.com",
+                "AMOR SAÚDE JUAZEIRO - NE2": "amorsaudejuazeiro.com",
+                "AMOR SAUDE TERESINA - NE2": "amorsaudeteresina.com",
+                "AMOR SAUDE SALVADOR - NE2": "amorsaudesalvador.com",
+                "AMOR SAUDE TERESINA CENTRO - NE2": "amorsaudeteresinacentro.com",
+                "AMOR SAUDE CAMACARI - NE2": "amorsaudecamacari.com",
+                "AMOR SAUDE TEIXEIRA DE FREITAS - NE2": "amorsaudetfreitas.com.br",
+                "AMOR SAUDE IMPERATRIZ - NE2": "asimperatriz.com",
+                "AMOR SAUDE FEIRA DE SANTANA - NE2": "amorsaudefsantana.com.br",
+                "AMOR SAUDE LAURO DE FREITAS - NE2": "aslaurofreitas.com",
+                "AMOR SAUDE CAXIAS DO MARANHAO - NE2": "@ascaxias.com",
+                "AMOR SAUDE PARIPE - NE2": "@asparipe.com",
+                "AMOR SAUDE ILHEUS - NE2": "asilheus.com",
+                "AMOR SAUDE BARREIRAS - NE2": "asbarreiras.com",
+                "AMOR SAUDE SAJ - NE2": "assaj.com",
+                "AMOR SAUDE PORTO SEGURO - NE2": "asportoseguro.com",
+                "AMOR SAUDE ALAGOINHAS - NE2": "asalagoinhas.com",
+                "AMOR SAUDE PAULO AFONSO - NE2": "aspauloafonso.com",
+                "AMOR SAUDE PICOS - NE2": "amorsaudepicos.com",
+                "AMOR SAUDE SIMOES FILHO - NE2": "assfilho.com",
+                "AMOR SAUDE JEQUIE - NE2": "amorsaudejequie.com",
+                "AMOR SAUDE IBIRAPUERA - NE2": "asibirapuera.com",
+                "AMOR SAUDE DOIS DE JULHO - NE2": "asdoisdejulho.com",
+                "AMOR SAUDE SERRINHA - NE2": "amorsaudeserrinha.com",
+                "AMOR SAUDE ITABUNA CENTRO - NE2": "asitabunacentro.com",
+                "AMOR SAUDE GUANAMBI - NE2": "asguanambi.com",
+                "AMOR SAUDE PARNAIBA - NE2": "asparnaiba.com",
+                "AMOR SAUDE EUNAPOLIS - NE2": "aseunapolis.com",
+                "AMOR SAUDE NOSSA  SENHORA DO SOCORRO - NE2": "amorsaudenss.com",
+                "AMOR SAUDE CABULA - NE2": "amorsaudecabula.com",
+                "AMOR SAUDE PAULISTA - NE3": "amorsaudepaulista.com.br",
+                "AMOR SAUDE OLINDA - NE3": "amorsaudeolinda.com.br",
+                "AMOR SAUDE CAMARAGIBE - NE3": "amorsaudecamaragibe.com",
+                "AMOR SAUDE RECIFE CENTRO - NE3": "amorsauderecifecentro.com",
+                "AMOR SAUDE AFOGADOS - NE3": "amorsaudeafogados.com.br",
+                "AMOR SAUDE PETROLINA - NE3": "aspetrolina.com",
+                "AMOR SAUDE ARAPIRACA - NE3": "amorsaudearapiraca.com.br",
+                "AMOR SAUDE JABOATAO - NE3": "asjaboatao.com",
+                "AMOR SAUDE GARANHUNS - NE3": "asgaranhuns.com",
+                "AMOR SAUDE GOIANA - NE3": "asgoiana.com",
+                "AMOR SAUDE VITORIA DE SANTO ANTAO - NE3": "asvitoriadesantoantao.com",
+                "AMOR SAUDE MACEIO NORTE - NE3": "asmaceionorte.com",
+                "AMOR SAUDE TIMBAUBA - NE3": "astimbauba.com",
+                "AMOR SAUDE MACEIO - NE3": "asmaceio.com",
+                "AMOR SAUDE SURUBIM - NE3": "assurubim.com",
+                "AMOR SAUDE CARUARU - NE3": "@ascaruaru.com",
+                "AMOR SAUDE SERRA TALHADA - NE3": "asserratalhada.com",
+                "AMOR SAUDE IGARASSU - NE3": "asigarassu.com",
+                "AMOR SAUDE CAMPO GRANDE - CO": "amorsaudecg.com.br",
+                "AMOR SAUDE CUIABA - CO": "amorsaudecuiaba.com.br",
+                "AMOR SAUDE GOIANIA SUL - CO": "amorsaudegs.com",
+                "AMOR SAUDE SAMAMBAIA - CO": "amorsaudesamambaia.com",
+                "AMOR SAUDE VALPARAISO - CO": "amorsaudevpgo.com.br",
+                "AMOR SAUDE VARZEA GRANDE - CO": "amorsaudevarzeagrande.com",
+                "AMOR SAUDE RONDONOPOLIS - CO": "amorsauderondonopolis.com",
+                "AMOR SAUDE CEILANDIA - CO": "amorsaudeceilandia.com",
+                "AMOR SAUDE GAMA - CO": "@amorsaudegama.com",
+                "AMOR SAUDE TRES LAGOAS - CO": "astreslagoas.com",
+                "AMOR SAUDE ITUMBIARA - CO": "asitumbiara.com",                
+                "AMOR SAUDE TANGARA DA SERRA - CO": "@amorsaudetangara.com",
+                "AMOR SAUDE CEILANDIA SUL - CO": "asceilandiasul.com",
+                "AMOR SAUDE AGUAS LINDAS DE GOIAS - CO": "amorsaudeaguaslindas.com",
+                "AMOR SAUDE RIO VERDE - CO": "asrioverde.com",
+                "AMOR SAUDE ANAPOLIS - CO": "asanapolis.com",
+                "AMOR SAUDE PLANALTINA - CO": "asplanaltina.com",
+                "AMOR SAUDE JARDIM BALNEARIO - CO": "asjardimbalneario.com",
+                "AMOR SAUDE GOIANIA CENTRO NORTE - CO": "asgcentronorte.com",
+                "AMOR SAUDE SANTA MARIA - CO": "assantamaria.com",
+                "AMOR SAUDE TAGUATINGA - CO": "f@astaguatinga.com",
+                "AMOR SAUDE SENADOR CANEDO - CO": "asscanedo.com",
+                "AMOR SAUDE DO CRUZEIRO - CO": "asdocruzeiro.com",
+                "AMOR SAUDE RECANTO DAS EMAS - CO": "asrecantodasemas.com",
+                "AMOR SAUDE CALDAS NOVAS - CO": "ascaldasnovas.com",
+                "AMOR SAUDE FORMOSA - CO": "amorsaudeformosa.com",
+                "AMOR SAUDE SAO SEBASTIAO - CO": "amssaosebastiao.com",
+                "AMOR SAUDE VILA MARIA - SP": "amorsaudevm.com"
+        
+
+                };
+            return unidadesEmails[unidade] || "";
+        }
+
+
+        document.getElementById("usuario").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                adicionarLogin();
+            }
+        });
+
+        const unidadeInput = document.getElementById("unidadeInput");
+        unidadeInput.addEventListener("input", function () {
+            const sugestoes = document.getElementById("sugestoes");
+            sugestoes.innerHTML = "";
+
+            const textoInput = unidadeInput.value.toLowerCase();
+            for (const unidade of unidades) {
+                const unidadeMinuscula = unidade.toLowerCase();
+                if (unidadeMinuscula.includes(textoInput)) {
+                    const sugestao = document.createElement("div");
+                    sugestao.classList.add("sugestao");
+                    sugestao.textContent = unidade;
+                    sugestao.addEventListener("click", function () {
+                        unidadeInput.value = unidade;
+                        sugestoes.innerHTML = "";
+                        selecionarUnidade(unidade);
+                    });
+                    sugestoes.appendChild(sugestao);
+                }
+            }
+            sugestoes.style.display = sugestoes.childNodes.length > 0 ? "block" : "none";
+        });
+
+        function adicionarLogin() {
+            const usuario = document.getElementById("usuario").value;
+            const prefixo = document.getElementById("prefixo").value;
+
+            if (!usuario || (!prefixo && prefixo !== "Nenhum") || !unidadeSelecionada) {
+                alert("Preencha todos os campos antes de adicionar um login.");
+                return;
+            }
+
+
+            
+            function selecionarUnidade(unidade) {
+    unidadeSelecionada = unidade;
+    const emailInput = document.getElementById("email");
+    const dominio = obterDominioEmail(unidadeSelecionada);
+    emailInput.value = dominio;
+}
+
+// Adicione esta função para limpar a lista de usuários
+function limparListaUsuarios() {
+    const listaLogins = document.getElementById("listaLogins");
+    listaLogins.innerHTML = "";
+}
+
+document.getElementById("usuario").addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        adicionarLogin();
+    }
+});
+
+const unidadeInput = document.getElementById("unidadeInput");
+unidadeInput.addEventListener("input", function () {
+    const sugestoes = document.getElementById("sugestoes");
+    sugestoes.innerHTML = "";
+
+    const textoInput = unidadeInput.value.toLowerCase();
+    for (const unidade of unidades) {
+        const unidadeMinuscula = unidade.toLowerCase();
+        if (unidadeMinuscula.includes(textoInput)) {
+            const sugestao = document.createElement("div");
+            sugestao.classList.add("sugestao");
+            sugestao.textContent = unidade;
+            sugestao.addEventListener("click", function () {
+                unidadeInput.value = unidade;
+                sugestoes.innerHTML = "";
+                selecionarUnidade(unidade);
+                // Limpar a lista de usuários quando uma unidade é selecionada
+                limparListaUsuarios();
+            });
+            sugestoes.appendChild(sugestao);
+        }
+    }
+    sugestoes.style.display = sugestoes.childNodes.length > 0 ? "block" : "none";
+});
+
+            let nomeFormatado = "";
+
+            if (prefixo !== "Nenhum") {
+                nomeFormatado = `*Usuário: ${formatarNomePrimeiraLetraMaiuscula(prefixo)} ${formatarNomePrimeiraLetraMaiuscula(usuario)}*`;
+            } else {
+                nomeFormatado = `*Usuário: ${formatarNomePrimeiraLetraMaiuscula(usuario)}*`;
+            }
+
+            let partesNome = usuario.split(' ');
+            let primeiroNome = partesNome[0].toLowerCase();
+            let primeiraLetraSegundoNome = partesNome[partesNome.length - 1].toLowerCase().charAt(0);
+
+            let emailDominio = obterDominioEmail(unidadeSelecionada);
+
+            let emailFinal = "";
+
+            if (prefixo !== "Nenhum") {
+                emailFinal = `${prefixo.toLowerCase().replace('.', '')}${removerAcentos(primeiroNome)}${primeiraLetraSegundoNome}@${removerAcentos(emailDominio)}`;
+            } else {
+                emailFinal = `${removerAcentos(primeiroNome)}${primeiraLetraSegundoNome}@${removerAcentos(emailDominio)}`;
+            }
+
+            let senha = `${prefixo !== "Nenhum" ? prefixo.toLowerCase().replace('.', '') : ""}${removerAcentos(primeiroNome)}${primeiraLetraSegundoNome}`.toLowerCase();
+
+            loginsDoutores.push({"Usuário": nomeFormatado, "Senha": senha, "Email": emailFinal});
+
+            atualizarListaLogins();
+
+            // Limpar campos de entrada
+            document.getElementById("usuario").value = "";
+            document.getElementById("unidadeInput").value = "";
+            document.getElementById("sugestoes").innerHTML = "";
+        }
+
+        
+
+        function selecionarUnidade(unidade) {
+            unidadeSelecionada = unidade;
+            const emailInput = document.getElementById("email");
+            const dominio = obterDominioEmail(unidadeSelecionada);
+            emailInput.value = dominio;
+        }
+
+        function excluirUltimoLogin() {
+            if (loginsDoutores.length === 0) {
+                alert("Nenhum login para excluir.");
+                return;
+            }
+            loginsDoutores.pop();
+            atualizarListaLogins();
+        }
+
+        function copiarLista() {
+            if (loginsDoutores.length === 0) {
+                alert("Nenhum login foi adicionado ainda.");
+                return;
+            }
+
+            let lista = "";
+            for (let login of loginsDoutores) {
+                lista += `${login['Usuário']}\nEmail: ${login['Email']}\nSenha: ${login['Senha']}\n\n`;
+            }
+
+            lista = lista.slice(0, -2);
+            copyToClipboard(lista);
+        }
+
+        function copyToClipboard(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('Lista de logins copiada para a área de transferência.');
+        }
+
+        function criarBlocoNotas() {
+            if (loginsDoutores.length === 0) {
+                alert("Nenhum login foi adicionado ainda.");
+                return;
+            }
+
+            let lista = "";
+            for (let login of loginsDoutores) {
+                lista += `${login['Usuário']}\nEmail: ${login['Email']}\nSenha: ${login['Senha']}\n\n`;
+            }
+
+            lista = lista.slice(0, -2);
+            downloadFile("Logins.txt", lista);
+        }
+
+        function downloadFile(filename, content) {
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        function atualizarListaLogins() {
+            const listaLogins = document.getElementById("listaLogins");
+            listaLogins.innerHTML = "";
+
+            for (let login of loginsDoutores) {
+                let loginItem = document.createElement("div");
+                loginItem.classList.add("login-item");
+                loginItem.innerHTML = `${login['Usuário']}<br>Email: ${login['Email']}<br>Senha: ${login['Senha']}<br>`;
+                listaLogins.appendChild(loginItem);
+            }
+        }
+
+        function formatarNomePrimeiraLetraMaiuscula(nome) {
+            return nome.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+
+        function removerAcentos(texto) {
+            return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+
+        function limparUsuarios() {
+            loginsDoutores.length = 0;
+            atualizarListaLogins();
+            unidadeSelecionada = "";
+            document.getElementById("unidadeInput").value = "";
+        }
+    </script>
+</body>
+</html>
